@@ -1,5 +1,6 @@
 package com.petly.backend.model;
 
+import com.petly.backend.model.enums.PetSize;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -20,5 +21,14 @@ public class Pet {
     
     private String breed;
     private Integer age;
-    private String color;
+    
+    @Enumerated(EnumType.STRING)
+    private PetSize size;
+    
+    @Column(columnDefinition = "TEXT")
+    private String specialNotes;
+    
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false)
+    private User owner;
 }
