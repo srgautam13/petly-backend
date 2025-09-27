@@ -1,6 +1,6 @@
 # Petly Backend
 
-Spring Boot backend application with GraphQL and Oracle database support.
+Spring Boot backend application with GraphQL and Oracle database support for pet management.
 
 ## Tech Stack
 - Java 17
@@ -8,6 +8,14 @@ Spring Boot backend application with GraphQL and Oracle database support.
 - GraphQL
 - Oracle Database
 - Maven
+- Lombok
+
+## Features
+- REST API endpoints
+- GraphQL support
+- Pet entity management
+- Health check endpoint
+- Oracle database integration
 
 ## Getting Started
 
@@ -25,3 +33,7 @@ mvn spring-boot:run
 ```bash
 mvn clean install
 ```
+
+### API Endpoints
+- Health Check: `GET /api/health`
+- GraphiQL: `GET /api/graphiql`
