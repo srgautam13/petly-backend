@@ -4,31 +4,56 @@ import com.petly.backend.model.enums.PetSize;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "pets")
 @Data
 public class Pet {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(nullable = false)
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @Column(nullable = false, length = 120)
     private String name;
-    
-    @Column(nullable = false)
-    private String species;
-    
+
+    @Column(nullable = false, length = 50)
+    private String species; // dog, cat, etc.
+
+    @Column(length = 80)
     private String breed;
-    private Integer age;
-    
+
+    private LocalDate dateOfBirth;
+
     @Enumerated(EnumType.STRING)
     private PetSize size;
-    
-    @Column(columnDefinition = "TEXT")
-    private String specialNotes;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
+
+    @Column(length = 255)
+    private String medicalNotes;
+
+    @Column(length = 255)
+    private String behaviorNotes;
+
+    @Column(nullable = false)
+    private LocalDateTime createdAt;
+
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }

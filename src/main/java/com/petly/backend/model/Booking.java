@@ -4,8 +4,8 @@ import com.petly.backend.model.enums.BookingStatus;
 import com.petly.backend.model.enums.ServiceType;
 import jakarta.persistence.*;
 import lombok.Data;
+
 import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -13,51 +13,59 @@ import java.util.List;
 @Table(name = "bookings")
 @Data
 public class Booking {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @ManyToOne
-    @JoinColumn(name = "owner_id", nullable = false)
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "owner_id")
     private User owner;
-    
-    @ManyToOne
-    @JoinColumn(name = "sitter_id", nullable = false)
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "sitter_id")
     private User sitter;
-    
+
+    @ManyToMany
+    @JoinTable(
+            name = "booking_pets",
+            joinColumns = @JoinColumn(name = "booking_id"),
+            inverseJoinColumns = @JoinColumn(name = "pet_id")
+    )
+    private List<Pet> pets;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ServiceType serviceType;
-    
+
     @Column(nullable = false)
-    private LocalDate startDate;
-    
+    private LocalDateTime startDateTime;
+
     @Column(nullable = false)
-    private LocalDate endDate;
-    
-    @ManyToMany
-    @JoinTable(name = "booking_pets")
-    private List<Pet> pets;
-    
-    private String serviceAddress;
-    
-    @Column(precision = 10, scale = 2)
-    private BigDecimal totalAmount;
-    
+    private LocalDateTime endDateTime;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status = BookingStatus.REQUESTED;
-    
+
+    @Column(nullable = false, precision = 10, scale = 2)
+    private BigDecimal totalPrice;
+
+    @Column(length = 100)
+    private String city;
+
+    @Column(length = 20)
+    private String zipCode;
+
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
+        updatedAt = createdAt;
     }
-    
+
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
